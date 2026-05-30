@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Linn Tab Workspace",
+  "version": "1.0.2",
+  "description": "A calmer new tab workspace for understanding, grouping, and cleaning up open tabs.",
+  "permissions": ["tabs", "activeTab", "storage", "favicon"],
+  "chrome_url_overrides": { "newtab": "index.html" },
+  "background": { "service_worker": "background.js" },
+  "action": {
+    "default_title": "Linn Tab Workspace",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

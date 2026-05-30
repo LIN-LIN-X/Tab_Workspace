@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linn Tab Workspace</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+
+
+  <!-- ================================================================
+       HEADER — greeting on the left
+       ================================================================ -->
+  <header>
+    <div class="header-left">
+      <!-- "Good afternoon" — written by getGreeting() in app.js -->
+      <h1 id="greeting"></h1>
+      <!-- "Friday, April 4, 2026" — written by getDateDisplay() in app.js -->
+      <div class="date" id="dateDisplay"></div>
+    </div>
+    <div class="header-actions">
+      <button class="action-btn" data-action="toggle-control-panel">Customize</button>
+    </div>
+  </header>
+
+  <section class="control-panel" id="controlPanel">
+    <div class="control-card">
+      <div class="control-label">Create category</div>
+      <div class="control-row">
+        <input type="text" id="newCategoryInput" class="control-input" placeholder="e.g. Research, Trip, Startup ideas">
+        <button class="action-btn primary" data-action="create-category">Add</button>
+      </div>
+      <div class="control-hint">Create your own topic buckets, then drag any tab row into them.</div>
+    </div>
+
+    <div class="control-card compact">
+      <div class="control-label">Theme</div>
+      <select id="themeSelect" class="control-select" data-action="theme-select">
+        <option value="paper">Paper</option>
+        <option value="graphite">Graphite</option>
+        <option value="forest">Forest</option>
+        <option value="blush">Blush</option>
+      </select>
+      <div class="control-label" style="margin-top:10px">Background</div>
+      <div class="control-row compact-row">
+        <input type="color" id="backgroundColorInput" class="control-color" value="#f8f5f0">
+        <input type="color" id="cardColorInput" class="control-color" value="#fffdf9" title="Module color">
+        <input type="color" id="accentColorInput" class="control-color" value="#c8713a" title="Accent color">
+        <button class="action-btn" data-action="reset-background-color">Reset</button>
+      </div>
+      <div class="control-hint">Background, module color, and accent color all update the workspace.</div>
+    </div>
+  </section>
+
+  <section class="workspace-intel">
+    <div class="search-shell">
+      <input type="search" id="workspaceSearch" class="workspace-search" placeholder="Search tabs, groups, or intent" autocomplete="off">
+    </div>
+    <div class="summary-strip" id="summaryStrip"></div>
+  </section>
+
+  <!-- ================================================================
+       WORKSPACE DUPES BANNER — appears when you have extra Linn workspace tabs open
+       Hidden by default; app.js shows it when duplicate workspace tabs are detected
+       ================================================================ -->
+  <div class="tab-cleanup-banner" id="tabOutDupeBanner" style="display:none">
+    <div class="tab-cleanup-left">
+      <div class="tab-cleanup-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+        </svg>
+      </div>
+      <div class="tab-cleanup-text">
+        You have <strong id="tabOutDupeCount"></strong> Linn workspace tabs open. Keep just this one?
+      </div>
+    </div>
+    <button class="tab-cleanup-btn" data-action="close-tabout-dupes">Close extras</button>
+  </div>
+
+  <!-- ================================================================
+       MAIN CONTENT AREA — two-column layout
+       Left: open tabs (domain/mission cards)
+       Right: saved for later checklist
+       The right column only renders when it has items (JS controls this)
+       ================================================================ -->
+  <div class="dashboard-columns" id="dashboardColumns">
+
+    <!-- LEFT COLUMN: Open tabs -->
+    <div class="active-section" id="openTabsSection" style="display:none">
+      <div class="section-header">
+        <h2 id="openTabsSectionTitle">Right now</h2>
+        <div class="section-line"></div>
+        <div class="section-count" id="openTabsSectionCount"></div>
+      </div>
+      <div class="missions" id="openTabsMissions"></div>
+    </div>
+
+  </div><!-- end .dashboard-columns -->
+
+  <!-- ================================================================
+       FOOTER — global stats + refresh control
+       ================================================================ -->
+  <footer>
+    <div class="footer-stats">
+      <div class="stat">
+        <div class="stat-num" id="statTabs">—</div>
+        <div class="stat-label">Open tabs</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="statGroups">—</div>
+        <div class="stat-label">Groups</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="statCustomGroups">—</div>
+        <div class="stat-label">Custom</div>
+      </div>
+    </div>
+    <div class="last-refresh" id="footerStatus">Linn's tab workspace</div>
+  </footer>
+
+</div><!-- end .container -->
+
+<!-- ================================================================
+     TOAST — floats above everything, used for action confirmations
+     Hidden by default via CSS (opacity:0, translateY)
+     ================================================================ -->
+<div class="toast" id="toast">
+  <!-- Checkmark circle icon (Heroicons outline) -->
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+  </svg>
+  <span id="toastText"></span>
+</div>
+
+<!-- Personal config (gitignored) — defines LOCAL_LANDING_PAGE_PATTERNS etc. -->
+<!-- If the file doesn't exist, that's fine — app.js uses sensible defaults. -->
+<script src="config.local.js" onerror="/* no personal config, that's fine */"></script>
+
+<!-- Main dashboard logic — loads last so the DOM is ready -->
+<script src="app.js"></script>
+</body>
+</html>
