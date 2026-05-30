@@ -1,6 +1,8 @@
-# Linn Tab Workspace
+# Tab Workspace
 
 **A calmer new tab for people who always have too many tabs open.**
+**Linn Tab Workspace is a Chrome extension that turns your new tab page into a calmer workspace for understanding and
+  cleaning up open tabs.**
 
 Linn Tab Workspace is a Chrome extension that replaces your new tab page with a lightweight tab workspace designed to reduce cognitive load.
 
